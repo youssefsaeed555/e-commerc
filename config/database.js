@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const db_connection = () => {
+
+const dbConnection = () => {
 
     mongoose.connect(process.env.DB_URL)
         .then((con) => {
@@ -7,4 +8,4 @@ const db_connection = () => {
         })
 }
 
-module.exports = db_connection
+module.exports = dbConnection

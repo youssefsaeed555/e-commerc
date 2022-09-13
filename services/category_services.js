@@ -1,8 +1,7 @@
-const category = require('../models/categrories')
 const slug = require('slugify')
 const asyncHandler = require('express-async-handler')
+const category = require('../models/categrories')
 const categrories = require('../models/categrories')
-const globalError = require('../middlewares/error_middlwares')
 const ApiError = require('../utils/ApiError')
 
 
@@ -22,7 +21,7 @@ exports.getCategory = asyncHandler(async (req, res) => {
 //@acess  private
 exports.addCatgory = asyncHandler(async (req, res) => {
 
-    const name = req.body.name
+    const { name } = req.body
     const catgory = await category.create({ name, slug: slug(name) })
     res.status(201).json({ data: catgory })
 })
@@ -33,6 +32,7 @@ exports.addCatgory = asyncHandler(async (req, res) => {
 //@acess public
 exports.getCategoryId = asyncHandler(async (req, res, next) => {
     const { id } = req.params
+    // eslint-disable-next-line no-shadow
     const category = await categrories.findById(id)
     if (!category) {
         return next(new ApiError(`no category for this id : ${id}`, 404))
@@ -47,6 +47,7 @@ exports.getCategoryId = asyncHandler(async (req, res, next) => {
 exports.updateCategoryId = asyncHandler(async (req, res, next) => {
     const { id } = req.params
     const { name } = req.body
+    // eslint-disable-next-line no-shadow
     const category = await categrories.findOneAndUpdate(
         { _id: id },
         { name, slug: slug(name) },
@@ -63,6 +64,7 @@ exports.updateCategoryId = asyncHandler(async (req, res, next) => {
 //@acess private
 exports.deleteCategoryId = asyncHandler(async (req, res, next) => {
     const { id } = req.params
+    // eslint-disable-next-line no-shadow
     const category = await categrories.findByIdAndDelete(id)
     if (!category) {
         return next(new ApiError(`no category for this id : ${id}`, 404))

@@ -1,5 +1,6 @@
 //create express app
 const express = require('express')
+
 const app = express()
 
 //config environment
@@ -19,8 +20,9 @@ const category = require('./routes/category_routes')
 
 
 //db coonection 
-const db_connection = require('./config/database')
-db_connection()
+const dbConnection = require('./config/database')
+
+dbConnection()
 
 //parse body
 app.use(express.json())
