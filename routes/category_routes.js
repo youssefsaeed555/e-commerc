@@ -16,6 +16,11 @@ const
         deleteCategoryId
     } = require('../services/category_services')
 
+const subCateogry = require('./sub_category')
+
+//deal with subcategories for spesfic category
+routes.use('/:categoryId/subCategory', subCateogry)
+
 routes.route('/')
     .get(getCategory)
     .post(
