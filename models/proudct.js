@@ -37,7 +37,6 @@ const proudct = new mongoose.Schema({
     brand: {
         type: mongoose.Types.ObjectId,
         ref: 'Brands',
-        required: [true, 'product must belong to brand'],
     },
     subCategory: [{
         type: mongoose.Types.ObjectId,
