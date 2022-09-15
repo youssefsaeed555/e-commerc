@@ -3,6 +3,7 @@ const { check } = require('express-validator')
 const validatorMiddlware = require('../../middlewares/express_validator')
 
 const Category = require('../../models/categrories')
+const SubCategories = require('../../models/sub_category')
 
 exports.createProuct = [
     check('title')
@@ -45,7 +46,16 @@ exports.createProuct = [
     check('subCategory')
         .optional()
         .isMongoId()
-        .withMessage('invalid id format'),
+        .withMessage('invalid id format')
+        .custom(async (subCategories) => {
+            //validate subcategory sent from bady is existance in DB
+            //check length of sub sent = to want check in db
+            const subCategory = await SubCategories.find({ _id: { $exists: true, $in: subCategories } })
+            if (subCategory.length < 1 || subCategories.length !== subCategory.length) {
+                throw new Error('invalid sub categories IDs')
+            }
+            return true
+        }),
     check('price')
         .notEmpty()
         .withMessage('proudct price required')
