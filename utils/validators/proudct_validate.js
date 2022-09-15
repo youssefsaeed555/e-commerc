@@ -6,7 +6,7 @@ exports.createProuct = [
     check('title')
         .notEmpty()
         .withMessage('title of proudct required')
-        .isLength({ max: 30 })
+        .isLength({ max: 100 })
         .withMessage('too max proudct title')
         .isLength({ min: 5 })
         .withMessage('too min proudct title'),

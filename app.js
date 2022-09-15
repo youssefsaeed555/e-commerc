@@ -30,16 +30,17 @@ dbConnection()
 //parse body
 app.use(express.json())
 
+
+if (process.env.NODE_ENV === "devolopment") {
+    app.use(morgan('dev'))
+}
+
 //mount routes
 app.use('/api/v1/categories', category)
 app.use('/api/v1/subCategories', subCategory)
 app.use('/api/v1/brands', brand)
 app.use('/api/v1/products', product)
 
-
-if (process.env.NODE_ENV === "devolopment") {
-    app.use(morgan('dev'))
-}
 
 // handling unexist route
 app.all('*', (req, res, next) => {

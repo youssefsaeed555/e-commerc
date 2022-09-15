@@ -4,14 +4,13 @@ const proudct = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-        maxLength: [30, 'too max proudct title'],
+        maxLength: [100, 'too max proudct title'],
         minLength: [5, 'too min proudct title'],
         trim: true
     },
     slug: {
         type: String,
-        lowerCase: true,
-        required: true
+        lowerCase: true
     },
     description: {
         type: String,
@@ -44,7 +43,7 @@ const proudct = new mongoose.Schema({
     }],
     price: {
         type: Number,
-        max: [10, 'too amx length price'],
+        max: [50000, 'too max length price'],
         required: [true, 'proudct price required'],
         trim: true
     },
@@ -63,8 +62,7 @@ const proudct = new mongoose.Schema({
     {
         type: Number,
         min: [1, 'raiting must be above or equal 1.0'],
-        max: [5, 'raiting must be less than or equal 1.0'],
-        default: 0
+        max: [5, 'raiting must be less than or equal 1.0']
     },
     countOfRaiting:
     {
