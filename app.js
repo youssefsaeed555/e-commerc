@@ -19,6 +19,7 @@ const globalError = require('./middlewares/error_middlwares')
 const category = require('./routes/category_routes')
 const subCategory = require('./routes/sub_category')
 const brand = require('./routes/brand')
+const product = require('./routes/proudct_routes')
 
 
 //db coonection 
@@ -33,6 +34,7 @@ app.use(express.json())
 app.use('/api/v1/categories', category)
 app.use('/api/v1/subCategories', subCategory)
 app.use('/api/v1/brands', brand)
+app.use('/api/v1/products', product)
 
 
 if (process.env.NODE_ENV === "devolopment") {

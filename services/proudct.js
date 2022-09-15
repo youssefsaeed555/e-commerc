@@ -7,7 +7,7 @@ const ApiError = require('../utils/ApiError')
 //@desc  get Proudcts
 //@route GET /api/v1/proudcts/
 //@acess public
-exports.getProudct = asyncHandler(async (req, res) => {
+exports.getProudcts = asyncHandler(async (req, res) => {
     const page = req.query.page || 1
     const limit = req.query.limit || 3
     const skip = (page - 1) * limit
@@ -29,7 +29,7 @@ exports.addProudct = asyncHandler(async (req, res) => {
 //@desc  get Proudct by id
 //@route GET /api/v1/proudcts/:id
 //@acess public
-exports.getProudctId = asyncHandler(async (req, res, next) => {
+exports.getProudct = asyncHandler(async (req, res, next) => {
     const { id } = req.params
     // eslint-disable-next-line no-shadow
     const proudct = await Proudct.findById(id)
