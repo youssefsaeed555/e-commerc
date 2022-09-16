@@ -36,7 +36,6 @@ exports.getProudcts = asyncHandler(async (req, res) => {
     if (req.query.sort) {
         //remove , send in query to send in sort
         const sorting = req.query.sort.split(",").join(" ")
-        console.log(sorting)
         //chain sort query
         buildQuery = buildQuery.sort(sorting)
     } else {
