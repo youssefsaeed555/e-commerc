@@ -36,11 +36,20 @@ exports.getProudcts = asyncHandler(async (req, res) => {
     if (req.query.sort) {
         //remove , send in query to send in sort
         const sorting = req.query.sort.split(",").join(" ")
+        console.log(sorting)
         //chain sort query
         buildQuery = buildQuery.sort(sorting)
-    }
-    else {
+    } else {
+        //if no sort send then sortt them based on newest
         buildQuery = buildQuery.sort('-createdAt')
+    }
+    //4-select fileds
+    if (req.query.fields) {
+        //chain select to build query
+        const fields = req.query.fields.split(',').join(' ')
+        buildQuery = buildQuery.select(fields)
+    } else {
+        buildQuery = buildQuery.select('-__v')
     }
 
     //excute query 
