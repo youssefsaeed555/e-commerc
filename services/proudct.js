@@ -51,6 +51,16 @@ exports.getProudcts = asyncHandler(async (req, res) => {
     } else {
         buildQuery = buildQuery.select('-__v')
     }
+    //5-search
+    if (req.query.keyword) {
+        const query = {}
+        query.$or = [
+            //options:'i' for not case sensitve
+            { title: { $regex: req.query.keyword, $options: 'i' } },
+            { description: { $regex: req.query.keyword, $options: 'i' } }
+        ]
+        buildQuery = buildQuery.find(query)
+    }
 
     //excute query 
     const product = await buildQuery
