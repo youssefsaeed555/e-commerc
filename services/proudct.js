@@ -8,13 +8,35 @@ const ApiError = require('../utils/ApiError')
 //@route GET /api/v1/proudcts/
 //@acess public
 exports.getProudcts = asyncHandler(async (req, res) => {
+    //exclusive any qeury not send in req
+    //1-filtering
+    const queryObj = { ...req.query }
+    const exclusives = ['page', 'limit', 'sort', 'fields']
+    //delete not send in query
+    exclusives.forEach((ele) => delete queryObj[ele])
+
+    //apply[gt,gte,lt,lte] to query sent
+    let qryString = JSON.stringify(queryObj) //1-convert json to string
+    qryString = qryString.replace(/\b(gt|gte|lt|lte)\b/g, (idx) => `$${idx}`)
+    //add $ to string to send in query mongosse
+
+
+    //2-pagination 
     const page = req.query.page || 1
-    const limit = req.query.limit || 3
+    const limit = req.query.limit || 5
     const skip = (page - 1) * limit
-    const product = await Proudct.find({})
+
+    //build query 
+    const buildQuery = Proudct.find(JSON.parse(qryString))
         .skip(skip)
         .limit(limit)
         .populate({ path: 'category', select: 'name -_id' })
+
+    //excute query 
+    const product = await buildQuery
+
+    if (product.length === 0) return res.json({ message: 'remove some query to get results' })
+
     return res.status(200).json({ count: product.length, page, data: product })
 })
 
