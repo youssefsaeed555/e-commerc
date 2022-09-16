@@ -55,6 +55,17 @@ exports.createProuct = [
                 throw new Error('invalid sub categories IDs')
             }
             return true
+        }).custom(async (value, { req }) => {
+            //ensure subcategory belongs to main cateogry
+            const subOfCategory = await SubCategories.find({ category: req.body.category })
+            const listOdSubCategoryId = []
+            subOfCategory.forEach(ids => listOdSubCategoryId.push(ids._id.toString()))
+            //check if every subcategory in value includes in listOfCategory get from db
+            const checker = (target, arr) => target.every(e => arr.includes(e))
+            if (!checker(value, listOdSubCategoryId)) {
+                throw new Error('these sub category not include to main category')
+            }
+            return true
         }),
     check('price')
         .notEmpty()
