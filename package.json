@@ -4,6 +4,7 @@
   "description": "ecommerce nodejs app",
   "main": "app.js",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^16.0.2",
     "env": "0.0.2",
     "express": "^4.18.1",
