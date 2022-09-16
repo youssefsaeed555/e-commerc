@@ -27,10 +27,18 @@ exports.getProudcts = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit
 
     //build query 
-    const buildQuery = Proudct.find(JSON.parse(qryString))
+    let buildQuery = Proudct.find(JSON.parse(qryString))
         .skip(skip)
         .limit(limit)
         .populate({ path: 'category', select: 'name -_id' })
+
+    //3-sort
+    if (req.query.sort) {
+        //remove , send in query to send in sort
+        const sorting = req.query.sort.split(",").join(" ")
+        //chain sort query
+        buildQuery = buildQuery.sort(sorting)
+    }
 
     //excute query 
     const product = await buildQuery
