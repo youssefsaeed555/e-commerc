@@ -39,6 +39,9 @@ exports.getProudcts = asyncHandler(async (req, res) => {
         //chain sort query
         buildQuery = buildQuery.sort(sorting)
     }
+    else {
+        buildQuery = buildQuery.sort('-createdAt')
+    }
 
     //excute query 
     const product = await buildQuery
