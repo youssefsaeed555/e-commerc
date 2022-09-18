@@ -2,71 +2,31 @@ const slug = require('slugify')
 const asyncHandler = require('express-async-handler')
 const Proudct = require('../models/proudct')
 const ApiError = require('../utils/ApiError')
-
+const ApiFeature = require('../utils/Api_feature')
 
 //@desc  get Proudcts
 //@route GET /api/v1/proudcts/
 //@acess public
 exports.getProudcts = asyncHandler(async (req, res) => {
-    //exclusive any qeury not send in req
-    //1-filtering
-    const queryObj = { ...req.query }
-    const exclusives = ['page', 'limit', 'sort', 'fields']
-    //delete not send in query
-    exclusives.forEach((ele) => delete queryObj[ele])
 
-    //apply[gt,gte,lt,lte] to query sent
-    let qryString = JSON.stringify(queryObj) //1-convert json to string
-    qryString = qryString.replace(/\b(gt|gte|lt|lte)\b/g, (idx) => `$${idx}`)
-    //add $ to string to send in query mongosse
+    //get count of documents 
+    const countDocs = await Proudct.countDocuments()
 
+    //create object frim api_feature class (build query)
+    const apiFeature = new ApiFeature(Proudct.find(), req.query)
+        .fields()
+        .search()
+        .sort()
+        .filter()
+        .paginate(countDocs)
 
-    //2-pagination 
-    const page = req.query.page || 1
-    const limit = req.query.limit || 5
-    const skip = (page - 1) * limit
-
-    //build query 
-    let buildQuery = Proudct.find(JSON.parse(qryString))
-        .skip(skip)
-        .limit(limit)
-        .populate({ path: 'category', select: 'name -_id' })
-
-    //3-sort
-    if (req.query.sort) {
-        //remove , send in query to send in sort
-        const sorting = req.query.sort.split(",").join(" ")
-        //chain sort query
-        buildQuery = buildQuery.sort(sorting)
-    } else {
-        //if no sort send then sortt them based on newest
-        buildQuery = buildQuery.sort('-createdAt')
-    }
-    //4-select fileds
-    if (req.query.fields) {
-        //chain select to build query
-        const fields = req.query.fields.split(',').join(' ')
-        buildQuery = buildQuery.select(fields)
-    } else {
-        buildQuery = buildQuery.select('-__v')
-    }
-    //5-search
-    if (req.query.keyword) {
-        const query = {}
-        query.$or = [
-            //options:'i' for not case sensitve
-            { title: { $regex: req.query.keyword, $options: 'i' } },
-            { description: { $regex: req.query.keyword, $options: 'i' } }
-        ]
-        buildQuery = buildQuery.find(query)
-    }
+    const { buildQuery, paginationResult } = apiFeature
 
     //excute query 
     const product = await buildQuery
-
     if (product.length === 0) return res.json({ message: 'remove some query to get results' })
 
-    return res.status(200).json({ count: product.length, page, data: product })
+    return res.status(200).json({ count: product.length, paginationResult, data: product })
 })
 
 //@desc   create Proudct
