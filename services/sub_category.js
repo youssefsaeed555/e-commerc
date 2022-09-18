@@ -6,6 +6,9 @@ const SubCategory = require('../models/sub_category')
 
 const ApiError = require('../utils/ApiError')
 
+const ApiFeature = require('../utils/Api_feature')
+
+
 //create sub based on category & check if no cateogry sent takt it from params
 exports.createSubOfCategory = (req, res, next) => {
     //no category becouse it send in params
@@ -37,17 +40,27 @@ exports.createSubCategory = asyncHandler(async (req, res, next) => {
 //@route get /api/v1/subCategories/
 //@acess public
 exports.getsubCategories = asyncHandler(async (req, res) => {
-    const { page } = req.query || 1
-    const { limit } = req.query || 5
-    const skip = (page - 1) * limit
+
     const objectFilter = {}
+
     if (req.params.categoryId) {
         objectFilter.category = req.params.categoryId
     }
-    const listSubCategories = await SubCategory.find(objectFilter).skip(skip).limit(limit)
+    //get count of documents
+    const countDocs = await SubCategory.countDocuments()
+
+    const apiFeature = new ApiFeature(SubCategory.find(), req.query)
+        .fields()
+        .search()
+        .sort()
+        .filter()
+        .paginate(countDocs)
+    const { buildQuery, paginationResult } = apiFeature
+
+    const listSubCategories = await buildQuery
     return res.status(200).json({
         count: listSubCategories.length,
-        page,
+        paginationResult,
         data: listSubCategories
     })
 })

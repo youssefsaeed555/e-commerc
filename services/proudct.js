@@ -15,7 +15,7 @@ exports.getProudcts = asyncHandler(async (req, res) => {
     //create object frim api_feature class (build query)
     const apiFeature = new ApiFeature(Proudct.find(), req.query)
         .fields()
-        .search()
+        .search("Proudct")
         .sort()
         .filter()
         .paginate(countDocs)

@@ -43,14 +43,20 @@ class apiFeature {
         return this
     }
 
-    search() {
+    search(modelName) {
         if (this.query.keyword) {
             const query = {}
-            query.$or = [
-                //options:'i' for not case sensitve
-                { title: { $regex: this.query.keyword, $options: 'i' } },
-                { description: { $regex: this.query.keyword, $options: 'i' } }
-            ]
+            if (modelName === 'Proudct') {
+                query.$or = [
+                    //options:'i' for not case sensitve
+                    { title: { $regex: this.query.keyword, $options: 'i' } },
+                    { description: { $regex: this.query.keyword, $options: 'i' } }
+                ]
+            }
+            else {
+                query.name = { $regex: this.query.keyword, $options: 'i' }
+            }
+
             this.buildQuery = this.buildQuery.find(query)
         }
         return this
