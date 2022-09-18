@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler')
 const brand = require('../models/brands')
 const ApiError = require('../utils/ApiError')
 const ApiFeature = require('../utils/Api_feature')
+const factoryHandler = require('./factory_handler')
 
 
 //@desc  get brands
@@ -73,12 +74,4 @@ exports.updateBrand = asyncHandler(async (req, res, next) => {
 //@desc  delete brand
 //@route DELETE /api/v1/brands/:id
 //@acess private
-exports.deleteBrand = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    // eslint-disable-next-line no-shadow
-    const deleteBrand = await brand.findByIdAndDelete(id)
-    if (!deleteBrand) {
-        return next(new ApiError(`no brand for this id : ${id}`, 404))
-    }
-    res.status(204).json({ msg: `delete brand succesfuly` })
-})
+exports.deleteBrand = factoryHandler.deleteOne(brand)

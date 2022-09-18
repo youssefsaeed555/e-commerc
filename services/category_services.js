@@ -1,18 +1,17 @@
 const slug = require('slugify')
 const asyncHandler = require('express-async-handler')
-const category = require('../models/categrories')
-const categrories = require('../models/categrories')
+const Category = require('../models/categrories')
 const ApiError = require('../utils/ApiError')
 const ApiFeature = require('../utils/Api_feature')
-
+const factoryHandler = require('./factory_handler')
 
 //@desc  get categories
 //@route GET /api/v1/categories/
 //@acess public
 exports.getCategory = asyncHandler(async (req, res) => {
-    const countDocs = await category.countDocuments()
+    const countDocs = await Category.countDocuments()
 
-    const apiFeature = new ApiFeature(category.find(), req.query)
+    const apiFeature = new ApiFeature(Category.find(), req.query)
         .fields()
         .search()
         .sort()
@@ -34,7 +33,7 @@ exports.getCategory = asyncHandler(async (req, res) => {
 exports.addCatgory = asyncHandler(async (req, res) => {
 
     const { name } = req.body
-    const catgory = await category.create({ name, slug: slug(name) })
+    const catgory = await Category.create({ name, slug: slug(name) })
     res.status(201).json({ data: catgory })
 })
 
@@ -45,7 +44,7 @@ exports.addCatgory = asyncHandler(async (req, res) => {
 exports.getCategoryId = asyncHandler(async (req, res, next) => {
     const { id } = req.params
     // eslint-disable-next-line no-shadow
-    const category = await categrories.findById(id)
+    const category = await Category.findById(id)
     if (!category) {
         return next(new ApiError(`no category for this id : ${id}`, 404))
     }
@@ -60,7 +59,7 @@ exports.updateCategoryId = asyncHandler(async (req, res, next) => {
     const { id } = req.params
     const { name } = req.body
     // eslint-disable-next-line no-shadow
-    const category = await categrories.findOneAndUpdate(
+    const category = await Category.findOneAndUpdate(
         { _id: id },
         { name, slug: slug(name) },
         { new: true } //return document after update
@@ -74,12 +73,4 @@ exports.updateCategoryId = asyncHandler(async (req, res, next) => {
 //@desc  delete category
 //@route DELETE /api/v1/categories/:id
 //@acess private
-exports.deleteCategoryId = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    // eslint-disable-next-line no-shadow
-    const category = await categrories.findByIdAndDelete(id)
-    if (!category) {
-        return next(new ApiError(`no category for this id : ${id}`, 404))
-    }
-    res.status(204).json({ msg: `delete category succesfuly` })
-})
+exports.deleteCategoryId = factoryHandler.deleteOne(Category)

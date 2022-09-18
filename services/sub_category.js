@@ -8,6 +8,9 @@ const ApiError = require('../utils/ApiError')
 
 const ApiFeature = require('../utils/Api_feature')
 
+const factoryHandler = require('./factory_handler')
+
+
 
 //create sub based on category & check if no cateogry sent takt it from params
 exports.createSubOfCategory = (req, res, next) => {
@@ -97,12 +100,4 @@ exports.updateSubCategoryId = asyncHandler(async (req, res, next) => {
 //@desc  delete subCategories
 //@route DELETE /api/v1/subCategories/:id
 //@acess private
-exports.deleteSubCategoryId = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    // eslint-disable-next-line no-shadow
-    const category = await SubCategory.findByIdAndDelete(id)
-    if (!category) {
-        return next(new ApiError(`no subCategory for this id : ${id}`, 404))
-    }
-    res.status(204).json({ msg: `delete subCategory succesfuly` })
-})
+exports.deleteSubCategoryId = factoryHandler.deleteOne(SubCategory)

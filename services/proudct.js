@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler')
 const Proudct = require('../models/proudct')
 const ApiError = require('../utils/ApiError')
 const ApiFeature = require('../utils/Api_feature')
+const factoryHandler = require('./factory_handler')
 
 //@desc  get Proudcts
 //@route GET /api/v1/proudcts/
@@ -79,12 +80,4 @@ exports.updateProudctId = asyncHandler(async (req, res, next) => {
 //@desc  delete Proudct
 //@route DELETE /api/v1/proudcts/:id
 //@acess private
-exports.deleteProudctId = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    // eslint-disable-next-line no-shadow
-    const proudct = await Proudct.findByIdAndDelete(id)
-    if (!proudct) {
-        return next(new ApiError(`no proudct for this id : ${id}`, 404))
-    }
-    res.status(204).json({ msg: `delete proudct succesfuly` })
-})
+exports.deleteProudctId = factoryHandler.deleteOne(Proudct)
