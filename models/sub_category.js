@@ -1,11 +1,12 @@
 const mongoose = require('mongoose')
 
-const categories = new mongoose.Schema({
+const subCategories = new mongoose.Schema({
     name:
     {
         type: String,
         required: [true, 'catgory required'],
         unique: [true, 'category must be unique'],
+        trim: true,
         minLength: [5, 'too short catgory'],
         maxLength: [35, 'tpp long category']
     },
@@ -13,7 +14,11 @@ const categories = new mongoose.Schema({
         type: String,
         lowerCase: true
     },
-    image: String
+    category: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Category',
+        required: [true, 'subcategory must belongs to maiin category']
+    }
 }, { timestamps: true })
 
-module.exports = mongoose.model('Category', categories)
+module.exports = mongoose.model('subCategory', subCategories)

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
-const db_connection = () => {
 
-    mongoose.connect(process.env.DB_URL)
+const dbConnection = () => {
+
+    mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: "true" })
         .then((con) => {
             console.log(`connect successfuly at : ${con.connection.host}`)
         })
 }
 
-module.exports = db_connection
+module.exports = dbConnection

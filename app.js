@@ -1,5 +1,6 @@
 //create express app
 const express = require('express')
+
 const app = express()
 
 //config environment
@@ -16,21 +17,30 @@ const globalError = require('./middlewares/error_middlwares')
 
 //routes
 const category = require('./routes/category_routes')
+const subCategory = require('./routes/sub_category')
+const brand = require('./routes/brand')
+const product = require('./routes/proudct_routes')
 
 
 //db coonection 
-const db_connection = require('./config/database')
-db_connection()
+const dbConnection = require('./config/database')
+
+dbConnection()
 
 //parse body
 app.use(express.json())
 
-//miunt routes
-app.use('/api/v1/categories', category)
 
 if (process.env.NODE_ENV === "devolopment") {
     app.use(morgan('dev'))
 }
+
+//mount routes
+app.use('/api/v1/categories', category)
+app.use('/api/v1/subCategories', subCategory)
+app.use('/api/v1/brands', brand)
+app.use('/api/v1/products', product)
+
 
 // handling unexist route
 app.all('*', (req, res, next) => {
