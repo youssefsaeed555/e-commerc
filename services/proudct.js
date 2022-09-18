@@ -38,23 +38,13 @@ exports.addProudct = factoryHandler.createDocument(Proudct)
 //@desc  get Proudct by id
 //@route GET /api/v1/proudcts/:id
 //@acess public
-exports.getProudct = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    // eslint-disable-next-line no-shadow
-    const proudct = await Proudct.findById(id)
-        .populate({ path: 'category', select: 'name -_id' })
-
-    if (!proudct) {
-        return next(new ApiError(`no Proudct for this id : ${id}`, 404))
-    }
-    res.status(200).json({ data: proudct })
-})
-
+exports.getProudct = factoryHandler.getDocument(Proudct)
 
 //@desc  update Proudct
 //@route PUT /api/v1/proudcts/:id
 //@acess private
 exports.updateProudctId = factoryHandler.updateOne(Proudct)
+
 //@desc  delete Proudct
 //@route DELETE /api/v1/proudcts/:id
 //@acess private

@@ -35,15 +35,7 @@ exports.addCatgory = factoryHandler.createDocument(Category)
 //@desc  get category by id
 //@route GET /api/v1/categories/:id
 //@acess public
-exports.getCategoryId = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    // eslint-disable-next-line no-shadow
-    const category = await Category.findById(id)
-    if (!category) {
-        return next(new ApiError(`no category for this id : ${id}`, 404))
-    }
-    res.status(200).json({ data: category })
-})
+exports.getCategoryId = factoryHandler.getDocument(Category)
 
 
 //@desc  update category

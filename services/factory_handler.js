@@ -30,3 +30,11 @@ exports.updateOne = (Model) => asyncHandler(async (req, res, next) => {
     }
     res.status(200).json({ data: document })
 })
+
+exports.getDocument = (Model) => asyncHandler(async (req, res, next) => {
+    const getDocument = await Model.findById(req.params.id)
+    if (!getDocument) {
+        return next(new ApiError(`no document for this id ${req.params.id}`, 404))
+    }
+    res.status(200).json({ data: getDocument })
+})

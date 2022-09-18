@@ -36,15 +36,7 @@ exports.addBrand = factoryHandler.createDocument(brand)
 //@desc  get brand by id
 //@route GET /api/v1/brand/:id
 //@acess public
-exports.getBrand = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    // eslint-disable-next-line no-shadow
-    const spesficBrand = await brand.findById(id)
-    if (!spesficBrand) {
-        return next(new ApiError(`no brand for this id : ${id}`, 404))
-    }
-    res.status(200).json({ data: spesficBrand })
-})
+exports.getBrand = factoryHandler.getDocument(brand)
 
 
 //@desc  update brand

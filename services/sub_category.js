@@ -38,7 +38,7 @@ exports.getsubCategories = asyncHandler(async (req, res) => {
     //get count of documents
     const countDocs = await SubCategory.countDocuments()
 
-    const apiFeature = new ApiFeature(SubCategory.find(), req.query)
+    const apiFeature = new ApiFeature(SubCategory.find(objectFilter), req.query)
         .fields()
         .search()
         .sort()
@@ -57,14 +57,7 @@ exports.getsubCategories = asyncHandler(async (req, res) => {
 //@desc  get subcategory by id
 //@route GET /api/v1/subCategories/:id
 //@acess public
-exports.getsubCategoryId = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    const spesficSubCategory = await SubCategory.findById(id)
-    if (!spesficSubCategory) {
-        return next(new ApiError(`no sub category for this id ${id}`, 404))
-    }
-    res.status(200).json({ data: spesficSubCategory })
-})
+exports.getsubCategoryId = factoryHandler.getDocument(SubCategory)
 
 //@desc  update subcategory
 //@route PUT /api/v1/subCategories/:id
