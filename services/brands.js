@@ -2,17 +2,29 @@ const slug = require('slugify')
 const asyncHandler = require('express-async-handler')
 const brand = require('../models/brands')
 const ApiError = require('../utils/ApiError')
+const ApiFeature = require('../utils/Api_feature')
 
 
 //@desc  get brands
 //@route GET /api/v1/brands/
 //@acess public
 exports.getbrands = asyncHandler(async (req, res) => {
-    const page = req.query.page || 1
-    const limit = req.query.limit || 3
-    const skip = (page - 1) * limit
-    const brands = await brand.find({}).skip(skip).limit(limit)
-    return res.status(200).json({ count: brands.length, page, data: brands })
+    const countDocs = await brand.countDocuments()
+
+    const apiFeature = new ApiFeature(brand.find(), req.query)
+        .fields()
+        .search()
+        .sort()
+        .filter()
+        .paginate(countDocs)
+    const { buildQuery, paginationResult } = apiFeature
+    const brands = await buildQuery
+    return res.status(200).json(
+        {
+            count: brands.length,
+            paginationResult,
+            data: brands
+        })
 })
 
 //@desc   create brand

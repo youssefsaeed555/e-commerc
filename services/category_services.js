@@ -3,17 +3,29 @@ const asyncHandler = require('express-async-handler')
 const category = require('../models/categrories')
 const categrories = require('../models/categrories')
 const ApiError = require('../utils/ApiError')
+const ApiFeature = require('../utils/Api_feature')
 
 
 //@desc  get categories
 //@route GET /api/v1/categories/
 //@acess public
 exports.getCategory = asyncHandler(async (req, res) => {
-    const page = req.query.page || 1
-    const limit = req.query.limit || 3
-    const skip = (page - 1) * limit
-    const categories = await category.find({}).skip(skip).limit(limit)
-    return res.status(200).json({ count: categories.length, page, data: categories })
+    const countDocs = await category.countDocuments()
+
+    const apiFeature = new ApiFeature(category.find(), req.query)
+        .fields()
+        .search()
+        .sort()
+        .filter()
+        .paginate(countDocs)
+    const { buildQuery, paginationResult } = apiFeature
+    const categories = await buildQuery
+    return res.status(200).json(
+        {
+            count: categories.length,
+            paginationResult,
+            data: categories
+        })
 })
 
 //@desc   create category
