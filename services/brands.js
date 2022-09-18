@@ -1,4 +1,3 @@
-const slug = require('slugify')
 const asyncHandler = require('express-async-handler')
 const brand = require('../models/brands')
 const ApiError = require('../utils/ApiError')
@@ -31,12 +30,7 @@ exports.getbrands = asyncHandler(async (req, res) => {
 //@desc   create brand
 //@route POST   /api/v1/brands/
 //@acess  private
-exports.addBrand = asyncHandler(async (req, res) => {
-
-    const { name } = req.body
-    const brands = await brand.create({ name, slug: slug(name) })
-    res.status(201).json({ data: brands })
-})
+exports.addBrand = factoryHandler.createDocument(brand)
 
 
 //@desc  get brand by id

@@ -14,7 +14,11 @@ exports.createBrandValidate = [
         .isLength({ min: 5 })
         .withMessage('too short brand')
         .isLength({ max: 35 })
-        .withMessage('too long brand'),
+        .withMessage('too long brand')
+        .custom((val, { req }) => {
+            req.body.slug = slugify(val)
+            return true
+        }),
     check('slug')
         .toLowerCase(),
     validatorMiddlware

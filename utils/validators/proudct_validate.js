@@ -15,7 +15,11 @@ exports.createProuct = [
         .isLength({ max: 100 })
         .withMessage('too max proudct title')
         .isLength({ min: 5 })
-        .withMessage('too min proudct title'),
+        .withMessage('too min proudct title')
+        .custom((val, { req }) => {
+            req.body.slug = slugify(val)
+            return true
+        }),
     check('description')
         .notEmpty()
         .withMessage('description of proudct required')

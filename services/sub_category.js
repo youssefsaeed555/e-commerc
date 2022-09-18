@@ -1,5 +1,3 @@
-const slug = require('slugify')
-
 const asyncHandler = require('express-async-handler')
 
 const SubCategory = require('../models/sub_category')
@@ -24,19 +22,7 @@ exports.createSubOfCategory = (req, res, next) => {
 //@desc  post sub categories
 //@route POST /api/v1/subCategories/
 //@acess private
-exports.createSubCategory = asyncHandler(async (req, res, next) => {
-    const { name, category } = req.body
-
-    const subCategory = await SubCategory.create({
-        name,
-        slug: slug(name),
-        category: category
-    })
-    return res.status(201).json({
-        message: 'sub category created succssfly',
-        data: subCategory
-    })
-})
+exports.createSubCategory = factoryHandler.createDocument(SubCategory)
 
 
 //@desc  get subcategories

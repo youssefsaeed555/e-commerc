@@ -16,7 +16,11 @@ exports.createSubCategoryValidate = [
         .isLength({ min: 5 })
         .withMessage('too short catgory')
         .isLength({ max: 35 })
-        .withMessage('too long SubCategory'),
+        .withMessage('too long SubCategory')
+        .custom((val, { req }) => {
+            req.body.slug = slugify(val)
+            return true
+        }),
     check('slug')
         .toLowerCase(),
     check('category')

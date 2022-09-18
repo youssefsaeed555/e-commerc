@@ -2,6 +2,12 @@ const asyncHandler = require('express-async-handler')
 const ApiError = require('../utils/ApiError')
 const ApiFeature = require('../utils/Api_feature')
 
+
+exports.createDocument = (Model) => asyncHandler(async (req, res) => {
+    const document = await Model.create(req.body)
+    res.status(201).json({ data: document })
+})
+
 exports.deleteOne = (Model) => asyncHandler(async (req, res, next) => {
     const { id } = req.params
     const document = await Model.findByIdAndDelete(id)

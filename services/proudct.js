@@ -1,4 +1,3 @@
-const slug = require('slugify')
 const asyncHandler = require('express-async-handler')
 const Proudct = require('../models/proudct')
 const ApiError = require('../utils/ApiError')
@@ -33,12 +32,7 @@ exports.getProudcts = asyncHandler(async (req, res) => {
 //@desc   create Proudct
 //@route POST   /api/v1/proudcts/
 //@acess  private
-exports.addProudct = asyncHandler(async (req, res) => {
-
-    req.body.slug = slug(req.body.title)
-    const proudct = await Proudct.create(req.body)
-    res.status(201).json({ data: proudct })
-})
+exports.addProudct = factoryHandler.createDocument(Proudct)
 
 
 //@desc  get Proudct by id
