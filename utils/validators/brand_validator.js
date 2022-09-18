@@ -1,4 +1,5 @@
 const { check } = require('express-validator')
+const slugify = require('slugify')
 const validatorMiddlware = require('../../middlewares/express_validator')
 
 exports.checkBrandId = [
@@ -21,6 +22,10 @@ exports.createBrandValidate = [
 exports.validateUpdateBrand =
     [
         check('id').isMongoId().withMessage(`invalid id format `),
+        check('name').custom((val, { req }) => {
+            req.body.slug = slugify(val).toLowerCase()
+            return true
+        }),
         validatorMiddlware
     ]
 exports.validateDeleteBrand =

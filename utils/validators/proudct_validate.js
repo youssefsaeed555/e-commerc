@@ -1,8 +1,11 @@
+const slugify = require('slugify')
+
 const { check } = require('express-validator')
 
 const validatorMiddlware = require('../../middlewares/express_validator')
 
 const Category = require('../../models/categrories')
+
 const SubCategories = require('../../models/sub_category')
 
 exports.createProuct = [
@@ -117,7 +120,15 @@ exports.getProudctId =
 
 exports.validateUpdatePRoudct =
     [
-        check('id').isMongoId().withMessage(`invalid id format `),
+        check('id')
+            .isMongoId()
+            .withMessage(`invalid id format `),
+        check('title')
+            .custom((value, { req }) => {
+                req.body.slug = slugify(value)
+                return true
+            })
+        ,
         validatorMiddlware
     ]
 exports.validateDeletePRoudct =

@@ -56,20 +56,7 @@ exports.getBrand = asyncHandler(async (req, res, next) => {
 //@desc  update brand
 //@route PUT /api/v1/brands/:id
 //@acess private
-exports.updateBrand = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    const { name } = req.body
-    // eslint-disable-next-line no-shadow
-    const updateBrand = await brand.findOneAndUpdate(
-        { _id: id },
-        { name, slug: slug(name) },
-        { new: true } //return document after update
-    )
-    if (!updateBrand) {
-        return next(new ApiError(`no brand for this id : ${id}`, 404))
-    }
-    res.status(200).json({ data: updateBrand })
-})
+exports.updateBrand = factoryHandler.updateOne(brand)
 
 //@desc  delete brand
 //@route DELETE /api/v1/brands/:id

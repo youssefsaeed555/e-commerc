@@ -55,20 +55,7 @@ exports.getCategoryId = asyncHandler(async (req, res, next) => {
 //@desc  update category
 //@route PUT /api/v1/categories/:id
 //@acess private
-exports.updateCategoryId = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    const { name } = req.body
-    // eslint-disable-next-line no-shadow
-    const category = await Category.findOneAndUpdate(
-        { _id: id },
-        { name, slug: slug(name) },
-        { new: true } //return document after update
-    )
-    if (!category) {
-        return next(new ApiError(`no category for this id : ${id}`, 404))
-    }
-    res.status(200).json({ data: category })
-})
+exports.updateCategoryId = factoryHandler.updateOne(Category)
 
 //@desc  delete category
 //@route DELETE /api/v1/categories/:id

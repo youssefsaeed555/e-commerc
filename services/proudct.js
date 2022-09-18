@@ -60,23 +60,7 @@ exports.getProudct = asyncHandler(async (req, res, next) => {
 //@desc  update Proudct
 //@route PUT /api/v1/proudcts/:id
 //@acess private
-exports.updateProudctId = asyncHandler(async (req, res, next) => {
-    const { id } = req.params
-    if (req.body.title) {
-        req.body.slug = slug(req.body.title)
-    }
-    // eslint-disable-next-line no-shadow
-    const proudct = await Proudct.findOneAndUpdate(
-        { _id: id },
-        req.body,
-        { new: true } //return document after update
-    )
-    if (!proudct) {
-        return next(new ApiError(`no proudct for this id : ${id}`, 404))
-    }
-    res.status(200).json({ data: proudct })
-})
-
+exports.updateProudctId = factoryHandler.updateOne(Proudct)
 //@desc  delete Proudct
 //@route DELETE /api/v1/proudcts/:id
 //@acess private

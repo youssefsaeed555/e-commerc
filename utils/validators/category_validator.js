@@ -1,4 +1,7 @@
 const { check } = require('express-validator')
+
+const slugify = require('slugify')
+
 const validatorMiddlware = require('../../middlewares/express_validator')
 
 exports.checkCategoryId = [
@@ -21,6 +24,10 @@ exports.createCategoryValidate = [
 exports.validateUpdateCategory =
     [
         check('id').isMongoId().withMessage(`invalid id format `),
+        check('name').custom((val, { req }) => {
+            req.body.slug = slugify(val).toLowerCase()
+            return true //that mean parameter val is passed succesfuly
+        }),
         validatorMiddlware
     ]
 exports.validateDeleteCategory =
