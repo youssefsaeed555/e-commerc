@@ -46,7 +46,7 @@ class apiFeature {
     search(modelName) {
         if (this.query.keyword) {
             const query = {}
-            if (modelName === 'Proudct') {
+            if (modelName === "Proudcts") {
                 query.$or = [
                     //options:'i' for not case sensitve
                     { title: { $regex: this.query.keyword, $options: 'i' } },

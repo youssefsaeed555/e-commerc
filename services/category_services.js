@@ -1,31 +1,10 @@
-const asyncHandler = require('express-async-handler')
 const Category = require('../models/categrories')
-const ApiError = require('../utils/ApiError')
-const ApiFeature = require('../utils/Api_feature')
 const factoryHandler = require('./factory_handler')
 
 //@desc  get categories
 //@route GET /api/v1/categories/
 //@acess public
-exports.getCategory = asyncHandler(async (req, res) => {
-    const countDocs = await Category.countDocuments()
-
-    const apiFeature = new ApiFeature(Category.find(), req.query)
-        .fields()
-        .search()
-        .sort()
-        .filter()
-        .paginate(countDocs)
-    const { buildQuery, paginationResult } = apiFeature
-    const categories = await buildQuery
-    return res.status(200).json(
-        {
-            count: categories.length,
-            paginationResult,
-            data: categories
-        })
-})
-
+exports.getCategory = factoryHandler.findListOfDocs(Category)
 //@desc   create category
 //@route POST   /api/v1/categories/
 //@acess  private

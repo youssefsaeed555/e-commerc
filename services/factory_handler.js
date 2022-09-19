@@ -38,3 +38,30 @@ exports.getDocument = (Model) => asyncHandler(async (req, res, next) => {
     }
     res.status(200).json({ data: getDocument })
 })
+
+exports.findListOfDocs = (Model, modelName = '') => asyncHandler(async (req, res) => {
+    const objectFilter = {}
+
+    if (req.params.categoryId) {
+        objectFilter.category = req.params.categoryId
+    }
+
+    //get count of documents 
+    const countDocs = await Model.countDocuments()
+
+    //create object frim api_feature class (build query)
+    const apiFeature = new ApiFeature(Model.find(objectFilter), req.query)
+        .fields()
+        .search(modelName)
+        .sort()
+        .filter()
+        .paginate(countDocs)
+
+    const { buildQuery, paginationResult } = apiFeature
+
+    //excute query 
+    const document = await buildQuery
+    if (document.length === 0) return res.json({ message: 'remove some query to get results' })
+
+    return res.status(200).json({ count: document.length, paginationResult, data: document })
+})

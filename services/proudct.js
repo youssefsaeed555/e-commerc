@@ -1,33 +1,10 @@
-const asyncHandler = require('express-async-handler')
 const Proudct = require('../models/proudct')
-const ApiError = require('../utils/ApiError')
-const ApiFeature = require('../utils/Api_feature')
 const factoryHandler = require('./factory_handler')
 
 //@desc  get Proudcts
 //@route GET /api/v1/proudcts/
 //@acess public
-exports.getProudcts = asyncHandler(async (req, res) => {
-
-    //get count of documents 
-    const countDocs = await Proudct.countDocuments()
-
-    //create object frim api_feature class (build query)
-    const apiFeature = new ApiFeature(Proudct.find(), req.query)
-        .fields()
-        .search("Proudct")
-        .sort()
-        .filter()
-        .paginate(countDocs)
-
-    const { buildQuery, paginationResult } = apiFeature
-
-    //excute query 
-    const product = await buildQuery
-    if (product.length === 0) return res.json({ message: 'remove some query to get results' })
-
-    return res.status(200).json({ count: product.length, paginationResult, data: product })
-})
+exports.getProudcts = factoryHandler.findListOfDocs(Proudct, "Proudcts")
 
 //@desc   create Proudct
 //@route POST   /api/v1/proudcts/
