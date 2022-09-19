@@ -1,8 +1,11 @@
+const slugify = require('slugify')
+
 const { check } = require('express-validator')
 
 const validatorMiddlware = require('../../middlewares/express_validator')
 
 const Category = require('../../models/categrories')
+
 const SubCategories = require('../../models/sub_category')
 
 exports.createProuct = [
@@ -12,7 +15,11 @@ exports.createProuct = [
         .isLength({ max: 100 })
         .withMessage('too max proudct title')
         .isLength({ min: 5 })
-        .withMessage('too min proudct title'),
+        .withMessage('too min proudct title')
+        .custom((val, { req }) => {
+            req.body.slug = slugify(val)
+            return true
+        }),
     check('description')
         .notEmpty()
         .withMessage('description of proudct required')
@@ -117,7 +124,15 @@ exports.getProudctId =
 
 exports.validateUpdatePRoudct =
     [
-        check('id').isMongoId().withMessage(`invalid id format `),
+        check('id')
+            .isMongoId()
+            .withMessage(`invalid id format `),
+        check('title')
+            .custom((value, { req }) => {
+                req.body.slug = slugify(value)
+                return true
+            })
+        ,
         validatorMiddlware
     ]
 exports.validateDeletePRoudct =
