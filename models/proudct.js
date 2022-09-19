@@ -71,4 +71,10 @@ const proudct = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+//mongose midleware call every time found "find" &  not take arrow function
+proudct.pre("find", function (next) {
+    this.populate({ path: 'category', select: 'name -_id' })
+    next()
+})
+
 module.exports = mongoose.model('Proudcts', proudct)
