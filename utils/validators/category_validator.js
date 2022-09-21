@@ -28,10 +28,12 @@ exports.createCategoryValidate = [
 exports.validateUpdateCategory =
     [
         check('id').isMongoId().withMessage(`invalid id format `),
-        check('name').custom((val, { req }) => {
-            req.body.slug = slugify(val).toLowerCase()
-            return true //that mean parameter val is passed succesfuly
-        }),
+        check('name')
+            .optional()
+            .custom((val, { req }) => {
+                req.body.slug = slugify(val).toLowerCase()
+                return true //that mean parameter val is passed succesfuly
+            }),
         validatorMiddlware
     ]
 exports.validateDeleteCategory =

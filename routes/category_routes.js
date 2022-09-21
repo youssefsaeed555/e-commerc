@@ -13,7 +13,9 @@ const
         getCategory,
         getCategoryId,
         updateCategoryId,
-        deleteCategoryId
+        deleteCategoryId,
+        uploadSingle,
+        resize
     } = require('../services/category_services')
 
 const subCateogry = require('./sub_category')
@@ -24,6 +26,8 @@ routes.use('/:categoryId/subCategory', subCateogry)
 routes.route('/')
     .get(getCategory)
     .post(
+        uploadSingle, //with memoryStorage its upload photo to memory => step1
+        resize, //reshap photo in memory befor save in disk
         createCategoryValidate,
         addCatgory)
 
@@ -33,6 +37,8 @@ routes.route('/:id')
         checkCategoryId,
         getCategoryId)
     .put(
+        uploadSingle, //with memoryStorage its upload photo to memory => step1
+        resize, //reshap photo in memory befor save in disk
         validateUpdateCategory,
         updateCategoryId)
     .delete(

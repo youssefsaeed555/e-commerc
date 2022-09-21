@@ -26,10 +26,12 @@ exports.createBrandValidate = [
 exports.validateUpdateBrand =
     [
         check('id').isMongoId().withMessage(`invalid id format `),
-        check('name').custom((val, { req }) => {
-            req.body.slug = slugify(val).toLowerCase()
-            return true
-        }),
+        check('name')
+            .optional()
+            .custom((val, { req }) => {
+                req.body.slug = slugify(val).toLowerCase()
+                return true
+            }),
         validatorMiddlware
     ]
 exports.validateDeleteBrand =

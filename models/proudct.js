@@ -70,7 +70,7 @@ const proudct = new mongoose.Schema({
         default: 0
     }
 }, { timestamps: true })
-
+//Pre middleware gets executed before the operation happens.
 //mongose midleware call every time found "find" &  not take arrow function
 proudct.pre("find", function (next) {
     this.populate({ path: 'category', select: 'name -_id' })
