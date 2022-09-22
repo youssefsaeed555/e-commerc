@@ -13,12 +13,16 @@ const
         getProudcts,
         addProudct,
         updateProudctId,
-        deleteProudctId
+        deleteProudctId,
+        uploadImage,
+        resize
     } = require('../services/proudct')
 
 routes.route('/')
     .get(getProudcts)
     .post(
+        uploadImage,
+        resize,
         createProuct,
         addProudct)
 
