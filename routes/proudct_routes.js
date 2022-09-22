@@ -13,12 +13,16 @@ const
         getProudcts,
         addProudct,
         updateProudctId,
-        deleteProudctId
+        deleteProudctId,
+        uploadImage,
+        resize
     } = require('../services/proudct')
 
 routes.route('/')
     .get(getProudcts)
     .post(
+        uploadImage,
+        resize,
         createProuct,
         addProudct)
 
@@ -28,6 +32,8 @@ routes.route('/:id')
         getProudctId,
         getProudct)
     .put(
+        uploadImage,
+        resize,
         validateUpdatePRoudct,
         updateProudctId)
     .delete(

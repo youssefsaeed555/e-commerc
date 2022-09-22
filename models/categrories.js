@@ -16,4 +16,20 @@ const categories = new mongoose.Schema({
     image: String
 }, { timestamps: true })
 
+const imageURl = (doc) => {
+    if (doc.image) {
+        const imageurl = `${process.env.BASE_URL}/category/${doc.image}`
+        doc.image = imageurl
+    }
+
+}
+//work with find,findOne,update 
+categories.post('init', (doc) => {
+    imageURl(doc)
+})
+//work with create
+categories.post('save', (doc) => {
+    imageURl(doc)
+})
+
 module.exports = mongoose.model('Category', categories)

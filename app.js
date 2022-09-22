@@ -1,3 +1,5 @@
+const path = require('path')
+
 //create express app
 const express = require('express')
 
@@ -29,7 +31,8 @@ dbConnection()
 
 //parse body
 app.use(express.json())
-
+//serve static files
+app.use(express.static(path.join(__dirname, 'uploads')))
 
 if (process.env.NODE_ENV === "devolopment") {
     app.use(morgan('dev'))

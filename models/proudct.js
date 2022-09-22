@@ -70,11 +70,33 @@ const proudct = new mongoose.Schema({
         default: 0
     }
 }, { timestamps: true })
-
+//Pre middleware gets executed before the operation happens.
 //mongose midleware call every time found "find" &  not take arrow function
 proudct.pre("find", function (next) {
     this.populate({ path: 'category', select: 'name -_id' })
     next()
 })
+
+const imageUrl = (doc) => {
+    if (doc.coverImage) {
+        const imageURl = `${process.env.BASE_URl}/proudct/${doc.coverImage}`
+        doc.coverImage = imageURl
+    }
+    if (doc.images) {
+        //wrap for every iage in images to get full url & put in new array
+        const listOfUrl = []
+        doc.images.forEach((img) => {
+            const imageURl = `${process.env.BASE_URl}/proudct/${img}`
+            listOfUrl.push(imageURl)
+        });
+        doc.images = listOfUrl
+    }
+}
+
+//that work with find, findOne, update
+proudct.post('init', (doc) => imageUrl(doc))
+
+//that work with create
+proudct.post('save', (doc) => imageUrl(doc))
 
 module.exports = mongoose.model('Proudcts', proudct)

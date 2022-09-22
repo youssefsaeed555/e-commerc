@@ -13,7 +13,9 @@ const
         getbrands,
         addBrand,
         updateBrand,
-        deleteBrand
+        deleteBrand,
+        uploadSingle,
+        resize
     } = require('../services/brands')
 
 //const subCateogry = require('./sub_category')
@@ -24,6 +26,8 @@ const
 routes.route('/')
     .get(getbrands)
     .post(
+        uploadSingle,
+        resize,
         createBrandValidate,
         addBrand)
 
@@ -33,6 +37,8 @@ routes.route('/:id')
         checkBrandId,
         getBrand)
     .put(
+        uploadSingle,
+        resize,
         validateUpdateBrand,
         updateBrand)
     .delete(
