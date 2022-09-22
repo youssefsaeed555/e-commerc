@@ -32,6 +32,8 @@ routes.route('/:id')
         getProudctId,
         getProudct)
     .put(
+        uploadImage,
+        resize,
         validateUpdatePRoudct,
         updateProudctId)
     .delete(
