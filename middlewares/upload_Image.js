@@ -10,7 +10,8 @@ const ApiError = require('../utils/ApiError')
     }
 })
 */
-exports.uploadSingleImage = (imageName) => {
+
+const multerOption = () => {
     //to transfer image to buffer and put it in memory
     const memory = multer.memoryStorage()
     //ensure images only applied
@@ -23,6 +24,13 @@ exports.uploadSingleImage = (imageName) => {
         }
     }
     const upload = multer({ storage: memory, fileFilter: fileFilter })
-    return upload.single(imageName)
+    return upload
 }
+
+//upload single Image
+exports.uploadSingleImage = (imageName) => multerOption().single(imageName)
+
+//upload multy image
+exports.uploadMixImage = (arrayOfFileds) => multerOption().fields(arrayOfFileds)
+
 
