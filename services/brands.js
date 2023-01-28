@@ -6,8 +6,7 @@ const upload = require("../middlewares/upload_Image");
 const factoryHandler = require("./factory_handler");
 
 exports.resize = asyncHandler(async (req, res, next) => {
-  const ext = req.file.originalname.split(".")[1];
-  const fn = `brands-${uuidv4()}-${Date.now()}.${ext}`;
+  const fn = `brands-${uuidv4()}-${Date.now()}.jpeg`;
   await sharp(req.file.buffer)
     .resize(600, 600)
     .toFormat("jpeg")
