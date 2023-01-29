@@ -1,5 +1,7 @@
 const { check } = require("express-validator");
+const bcrypt = require("bcryptjs");
 const validation = require("../../middlewares/express_validator");
+
 const user = require("../../models/users");
 
 exports.validateAddUser = [
@@ -58,8 +60,45 @@ exports.validateUpdateUser = [
       }
       return true;
     }),
+  check("profileImg").optional(),
+  check("role").optional(),
+  check("phone")
+    .optional()
+    .isMobilePhone("ar-EG")
+    .withMessage("input valid egyptian phone"),
   validation,
 ];
+
+exports.validateChangePassword = [
+  check("currentPassword")
+    .notEmpty()
+    .withMessage("current Password is required"),
+  check("confirmPassword")
+    .notEmpty()
+    .withMessage("confirm Password is required"),
+  check("password")
+    .notEmpty()
+    .withMessage("new Password is required")
+    .custom(async (val, { req }) => {
+      const spesficUser = await user.findOne({ _id: req.params.id });
+      //validate current password
+      const matchPassword = await bcrypt.compare(
+        req.body.currentPassword,
+        spesficUser.password
+      );
+      console.log(matchPassword);
+      if (!matchPassword) {
+        throw new Error("current password is incorrect");
+      }
+      //vallidate confirm password
+      if (val !== req.body.confirmPassword) {
+        throw new Error("confirm password is incorrect");
+      }
+      return true;
+    }),
+  validation,
+];
+
 exports.validateDeleteUser = [
   check("id").isMongoId().withMessage(`invalid id format `),
   validation,

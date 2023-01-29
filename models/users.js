@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const brcypt = require("bcryptjs");
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -46,6 +48,12 @@ userSchema.post("init", (doc) => {
 
 userSchema.post("save", (doc) => {
   setImageUrl(doc);
+});
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await brcypt.hash(this.password, 12);
+  next();
 });
 
 module.exports = mongoose.model("Users", userSchema);
