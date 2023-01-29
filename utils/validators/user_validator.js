@@ -19,11 +19,22 @@ exports.validateAddUser = [
       }
       return true;
     }),
+
   check("password")
     .notEmpty()
     .withMessage("password is required")
     .isLength({ min: 6 })
     .withMessage("too short password must be greater than 6 chars"),
+
+  check("confirmPassword")
+    .notEmpty()
+    .withMessage("confirm password required")
+    .custom((val, { req }) => {
+      if (val !== req.body.password) {
+        throw new Error("password confirm is incorrect");
+      }
+      return true;
+    }),
   check("profileImg").optional(),
   check("role").optional(),
   check("phone")
