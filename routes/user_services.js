@@ -11,12 +11,18 @@ const {
   resize,
 } = require("../services/user_services");
 
-routes.route("/").get(getUsers).post(upload, resize, addUser);
+const {
+  validateAddUser,
+  validateDeleteUser,
+  validateUpdateUser,
+} = require("../utils/validators/user_validator");
+
+routes.route("/").get(getUsers).post(upload, resize, validateAddUser, addUser);
 
 routes
   .route("/:id")
   .get(getUser)
-  .put(upload, resize, updateUser)
-  .delete(deleteUser);
+  .put(upload, resize, validateUpdateUser, updateUser)
+  .delete(validateDeleteUser, deleteUser);
 
 module.exports = routes;
