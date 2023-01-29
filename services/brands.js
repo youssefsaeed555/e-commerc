@@ -7,13 +7,16 @@ const factoryHandler = require("./factory_handler");
 
 exports.resize = asyncHandler(async (req, res, next) => {
   const fn = `brands-${uuidv4()}-${Date.now()}.jpeg`;
-  await sharp(req.file.buffer)
-    .resize(600, 600)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`uploads/brand/${fn}`);
+  if (req.file) {
+    await sharp(req.file.buffer)
+      .resize(600, 600)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`uploads/brand/${fn}`);
 
-  req.body.image = fn;
+    req.body.image = fn;
+  }
+
   next();
 });
 

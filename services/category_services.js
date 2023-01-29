@@ -6,14 +6,17 @@ const factoryHandler = require("./factory_handler");
 const upload = require("../middlewares/upload_Image");
 
 exports.resize = asyncHandler(async (req, res, next) => {
-  const fn = `category-${uuidv4()}-${Date.now()}.jpeg`;
-  await sharp(req.file.buffer)
-    .resize(600, 600)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`uploads/category/${fn}`); //save file in the disk
+  if (req.file) {
+    const fn = `category-${uuidv4()}-${Date.now()}.jpeg`;
+    await sharp(req.file.buffer)
+      .resize(600, 600)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`uploads/category/${fn}`); //save file in the disk
 
-  req.body.image = fn;
+    req.body.image = fn;
+  }
+
   next();
 });
 

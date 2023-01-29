@@ -7,12 +7,14 @@ const user = require("../models/users");
 
 exports.resize = asyncHandler(async (req, res, next) => {
   const fileName = `user-${uuidv4()}-${Date.now()}.jpeg`;
-  await sharp(req.file.buffer)
-    .resize(600, 600)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`uploads/users/${fileName}`);
-  req.body.profileImg = fileName;
+  if (req.file) {
+    await sharp(req.file.buffer)
+      .resize(600, 600)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`uploads/users/${fileName}`);
+    req.body.profileImg = fileName;
+  }
   next();
 });
 
