@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
+// eslint-disable-next-line node/no-extraneous-require
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const upload = require("../middlewares/upload_Image");
