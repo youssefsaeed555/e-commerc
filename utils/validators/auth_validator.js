@@ -1,6 +1,5 @@
 const { check } = require("express-validator");
 // eslint-disable-next-line node/no-extraneous-require
-const bcrypt = require("bcryptjs");
 const validation = require("../../middlewares/express_validator");
 
 const user = require("../../models/users");
