@@ -68,17 +68,19 @@ exports.protect = asyncHandler(async (req, res, next) => {
     );
   }
   //4-check if user change password after generate its token
-  const changPasswordTime = parseInt(
-    checkUser.changePasswordAt.getTime() / 1000,
-    10
-  );
-  if (changPasswordTime > decoded.iat) {
-    return next(
-      new ApiError(
-        "user recently changed his password, please login again",
-        401
-      )
+  if (checkUser.changePasswordAt) {
+    const changPasswordTime = parseInt(
+      checkUser.changePasswordAt.getTime() / 1000,
+      10
     );
+    if (changPasswordTime > decoded.iat) {
+      return next(
+        new ApiError(
+          "user recently changed his password, please login again",
+          401
+        )
+      );
+    }
   }
 
   req.user = checkUser;
