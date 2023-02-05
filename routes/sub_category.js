@@ -15,19 +15,35 @@ const {
   deleteSubCategoryId,
   createSubOfCategory,
 } = require("../services/sub_category");
-const { protect } = require("../services/auth_services");
+const { protect, isAllowedTo } = require("../services/auth_services");
 
 const routes = express.Router({ mergeParams: true });
 //we need to acess params but from parent route
 
 routes
   .route("/")
-  .get(protect, getsubCategories)
-  .post(createSubOfCategory, createSubCategoryValidate, createSubCategory);
+  .get(getsubCategories)
+  .post(
+    protect,
+    isAllowedTo("admin", "manger"),
+    createSubOfCategory,
+    createSubCategoryValidate,
+    createSubCategory
+  );
 
 routes
   .route("/:id")
   .get(checkSubCategoryId, getsubCategoryId)
-  .put(validateUpdateSubCategory, updateSubCategoryId)
-  .delete(validateDeleteSubCategory, deleteSubCategoryId);
+  .put(
+    protect,
+    isAllowedTo("admin", "manger"),
+    validateUpdateSubCategory,
+    updateSubCategoryId
+  )
+  .delete(
+    protect,
+    isAllowedTo("admin"),
+    validateDeleteSubCategory,
+    deleteSubCategoryId
+  );
 module.exports = routes;

@@ -19,12 +19,31 @@ const {
   validateChangePassword,
 } = require("../utils/validators/user_validator");
 
-routes.route("/").get(getUsers).post(upload, resize, validateAddUser, addUser);
+const { protect, isAllowedTo } = require("../services/auth_services");
+
+routes
+  .route("/")
+  .get(protect, isAllowedTo("admin", "manger"), getUsers)
+  .post(
+    protect,
+    isAllowedTo("admin"),
+    upload,
+    resize,
+    validateAddUser,
+    addUser
+  );
 routes.route("/changePassword/:id").put(validateChangePassword, changePassword);
 routes
   .route("/:id")
-  .get(getUser)
-  .put(upload, resize, validateUpdateUser, updateUser)
-  .delete(validateDeleteUser, deleteUser);
+  .get(protect, isAllowedTo("admin"), getUser)
+  .put(
+    protect,
+    isAllowedTo("admin"),
+    upload,
+    resize,
+    validateUpdateUser,
+    updateUser
+  )
+  .delete(protect, isAllowedTo("admin"), validateDeleteUser, deleteUser);
 
 module.exports = routes;
