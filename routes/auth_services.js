@@ -1,7 +1,13 @@
 const express = require("express");
 
 const routes = express.Router();
-const { signUp, login } = require("../services/auth_services");
+const {
+  signUp,
+  login,
+  forgetPassword,
+  verifyCode,
+  resetPassword,
+} = require("../services/auth_services");
 
 const {
   validateSignup,
@@ -10,11 +16,8 @@ const {
 
 routes.route("/signup").post(validateSignup, signUp);
 routes.route("/login").post(validateLogin, login);
-// routes.route("/changePassword/:id").put(validateChangePassword, changePassword);
-// routes
-//   .route("/:id")
-//   .get(getUser)
-//   .put(upload, resize, validateUpdateUser, updateUser)
-//   .delete(validateDeleteUser, deleteUser);
+routes.route("/forgetPassword").post(forgetPassword);
+routes.route("/verifyCode").post(verifyCode);
+routes.route("/resetPassword").put(resetPassword);
 
 module.exports = routes;
