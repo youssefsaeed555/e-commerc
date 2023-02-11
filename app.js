@@ -23,6 +23,7 @@ const subCategory = require("./routes/sub_category");
 const brand = require("./routes/brand");
 const product = require("./routes/proudct_routes");
 const user = require("./routes/user_services");
+const auth = require("./routes/auth_services");
 
 //db coonection
 const dbConnection = require("./config/database");
@@ -44,6 +45,7 @@ app.use("/api/v1/subCategories", subCategory);
 app.use("/api/v1/brands", brand);
 app.use("/api/v1/products", product);
 app.use("/api/v1/users", user);
+app.use("/api/v1/auth", auth);
 
 // handling unexist route
 app.all("*", (req, res, next) => {

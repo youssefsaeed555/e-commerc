@@ -11,26 +11,30 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "name is required"],
+      required: [true, "email is required"],
       unique: true,
       trim: true,
     },
     password: {
       type: String,
-      required: [true, "name is required"],
+      required: [true, "password is required"],
       minLength: [6, "too short password"],
     },
     phone: String,
     profileImg: String,
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "manger", "admin"],
       default: "user",
     },
     isActive: {
       type: Boolean,
       default: true,
     },
+    changePasswordAt: Date,
+    passwordCodeReset: String,
+    passwordCodeResetExpire: Date,
+    isVerified: Boolean,
   },
   { timestamps: true }
 );

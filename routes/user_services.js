@@ -10,6 +10,9 @@ const {
   upload,
   resize,
   changePassword,
+  getLoggedUser,
+  changePasswordLoggedUser,
+  updateloggedUser,
 } = require("../services/user_services");
 
 const {
@@ -17,8 +20,22 @@ const {
   validateDeleteUser,
   validateUpdateUser,
   validateChangePassword,
+  validateUpdateLoggedUser,
 } = require("../utils/validators/user_validator");
 
+const { protect, isAllowedTo } = require("../services/auth_services");
+
+routes.use(protect);
+
+routes.get("/getMe", getLoggedUser, getUser);
+routes.put(
+  "/changeMyPassword",
+  validateChangePassword,
+  changePasswordLoggedUser
+);
+routes.route("/updateMe").put(validateUpdateLoggedUser, updateloggedUser);
+
+routes.use(isAllowedTo("admin", "manger"));
 routes.route("/").get(getUsers).post(upload, resize, validateAddUser, addUser);
 routes.route("/changePassword/:id").put(validateChangePassword, changePassword);
 routes

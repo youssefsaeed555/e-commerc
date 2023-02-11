@@ -1,4 +1,5 @@
 const { check } = require("express-validator");
+// eslint-disable-next-line node/no-extraneous-require
 const bcrypt = require("bcryptjs");
 const validation = require("../../middlewares/express_validator");
 
@@ -80,7 +81,9 @@ exports.validateChangePassword = [
     .notEmpty()
     .withMessage("new Password is required")
     .custom(async (val, { req }) => {
-      const spesficUser = await user.findOne({ _id: req.params.id });
+      const spesficUser = await user.findOne({
+        _id: req.params.id || req.user._id,
+      });
       //validate current password
       const matchPassword = await bcrypt.compare(
         req.body.currentPassword,
@@ -101,5 +104,23 @@ exports.validateChangePassword = [
 
 exports.validateDeleteUser = [
   check("id").isMongoId().withMessage(`invalid id format `),
+  validation,
+];
+exports.validateUpdateLoggedUser = [
+  check("name").optional(),
+  check("email")
+    .optional()
+    .isEmail()
+    .custom(async (val, { req }) => {
+      const checkUser = await user.findOne({ email: val });
+      if (checkUser) {
+        throw new Error("email already exist");
+      }
+      return true;
+    }),
+  check("phone")
+    .optional()
+    .isMobilePhone("ar-EG")
+    .withMessage("input valid egyptian phone"),
   validation,
 ];
