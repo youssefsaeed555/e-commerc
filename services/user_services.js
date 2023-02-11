@@ -7,6 +7,7 @@ const upload = require("../middlewares/upload_Image");
 const factoryHandler = require("./factory_handler");
 const user = require("../models/users");
 const ApiError = require("../utils/ApiError");
+const generateToken = require("../utils/generateToken");
 
 exports.resize = asyncHandler(async (req, res, next) => {
   const fileName = `user-${uuidv4()}-${Date.now()}.jpeg`;
@@ -83,3 +84,37 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
 //@route DELETE /api/v1/user/:id
 //@acess private
 exports.deleteUser = factoryHandler.deleteOne(user);
+
+exports.getLoggedUser = asyncHandler(async (req, res, next) => {
+  req.params.id = req.user._id;
+  next();
+});
+
+exports.changePasswordLoggedUser = asyncHandler(async (req, res, next) => {
+  const updateUser = await user.findByIdAndUpdate(
+    req.user._id,
+    {
+      password: await bcrypt.hash(req.body.password, 12),
+      changePasswordAt: Date.now(),
+    },
+    { new: true }
+  );
+
+  //generate token
+  const token = generateToken(updateUser._id);
+
+  return res.status(200).json({ updateUser, token });
+});
+
+exports.updateloggedUser = asyncHandler(async (req, res, next) => {
+  const updateUser = await user.findByIdAndUpdate(
+    req.user._id,
+    {
+      email: req.body.email,
+      phone: req.body.phone,
+      name: req.body.name,
+    },
+    { new: true }
+  );
+  return res.status(200).json({ updateUser });
+});
