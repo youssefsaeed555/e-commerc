@@ -64,7 +64,7 @@ exports.addProudct = factoryHandler.createDocument(Proudct);
 //@desc  get Proudct by id
 //@route GET /api/v1/proudcts/:id
 //@acess public
-exports.getProudct = factoryHandler.getDocument(Proudct);
+exports.getProudct = factoryHandler.getDocument(Proudct, "reviews");
 
 //@desc  update Proudct
 //@route PUT /api/v1/proudcts/:id

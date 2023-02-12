@@ -15,6 +15,7 @@ exports.deleteOne = (Model) =>
     if (!document) {
       return next(new ApiError(`no document for this id : ${id}`, 404));
     }
+    document.remove();
     res.status(204).json({ msg: `delete category succesfuly` });
   });
 
@@ -31,12 +32,20 @@ exports.updateOne = (Model) =>
         new ApiError(`no document for this id : ${req.params.id}`, 404)
       );
     }
+    //trigger save vent when update document
+    document.save();
     res.status(200).json({ data: document });
   });
 
-exports.getDocument = (Model) =>
+exports.getDocument = (Model, optionPopulation) =>
   asyncHandler(async (req, res, next) => {
-    const getDocument = await Model.findById(req.params.id);
+    //build query
+    let query = Model.findById(req.params.id);
+    if (optionPopulation) {
+      query = query.populate(optionPopulation);
+    }
+    //excute query
+    const getDocument = await query;
     if (!getDocument) {
       return next(
         new ApiError(`no document for this id ${req.params.id}`, 404)
@@ -47,12 +56,8 @@ exports.getDocument = (Model) =>
 
 exports.findListOfDocs = (Model, modelName = "") =>
   asyncHandler(async (req, res) => {
-    const objectFilter = {};
-
-    if (req.params.categoryId) {
-      objectFilter.category = req.params.categoryId;
-    }
-
+    let objectFilter = {};
+    if (req.objFilter) objectFilter = req.objFilter;
     //get count of documents
     const countDocs = await Model.countDocuments();
 

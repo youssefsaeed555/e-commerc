@@ -9,6 +9,7 @@ const {
 } = require("../utils/validators/proudct_validate");
 
 const { protect, isAllowedTo } = require("../services/auth_services");
+const reviews = require("./reviwes");
 
 const {
   getProudct,
@@ -19,6 +20,8 @@ const {
   uploadImage,
   resize,
 } = require("../services/proudct");
+
+routes.use("/:productId/reviews", reviews);
 
 routes
   .route("/")
