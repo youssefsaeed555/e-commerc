@@ -55,7 +55,7 @@ class apiFeature {
       } else {
         query.name = { $regex: this.query.keyword, $options: "i" };
       }
-
+      console.log(query);
       this.buildQuery = this.buildQuery.find(query);
     }
     return this;

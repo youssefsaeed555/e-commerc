@@ -14,6 +14,7 @@ const {
   updateSubCategoryId,
   deleteSubCategoryId,
   createSubOfCategory,
+  setParamsOfCategory,
 } = require("../services/sub_category");
 const { protect, isAllowedTo } = require("../services/auth_services");
 
@@ -22,7 +23,7 @@ const routes = express.Router({ mergeParams: true });
 
 routes
   .route("/")
-  .get(getsubCategories)
+  .get(setParamsOfCategory, getsubCategories)
   .post(
     protect,
     isAllowedTo("admin", "manger"),

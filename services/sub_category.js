@@ -13,6 +13,19 @@ exports.createSubOfCategory = (req, res, next) => {
   next();
 };
 
+exports.setParamsOfCategory = (req, res, next) => {
+  const objFilter = {};
+  if (req.params.categoryId) {
+    objFilter.category = req.params.categoryId;
+  }
+  req.objFilter = objFilter;
+  next();
+};
+
+// if (req.params.categoryId) {
+//   objectFilter.category = req.params.categoryId;
+// }
+
 //@desc  post sub categories
 //@route POST /api/v1/subCategories/
 //@acess private
