@@ -35,6 +35,12 @@ const userSchema = new mongoose.Schema(
     passwordCodeReset: String,
     passwordCodeResetExpire: Date,
     isVerified: Boolean,
+    wishList: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Proudcts",
+      },
+    ],
   },
   { timestamps: true }
 );

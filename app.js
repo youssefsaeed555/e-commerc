@@ -25,6 +25,7 @@ const product = require("./routes/proudct_routes");
 const user = require("./routes/user_services");
 const auth = require("./routes/auth_services");
 const reviwes = require("./routes/reviwes");
+const wishList = require("./routes/wishListRoutes");
 
 //db coonection
 const dbConnection = require("./config/database");
@@ -48,6 +49,7 @@ app.use("/api/v1/products", product);
 app.use("/api/v1/users", user);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/review", reviwes);
+app.use("/api/v1/wishList", wishList);
 
 // handling unexist route
 app.all("*", (req, res, next) => {
