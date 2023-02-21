@@ -26,6 +26,7 @@ const user = require("./routes/user_services");
 const auth = require("./routes/auth_services");
 const reviwes = require("./routes/reviwes");
 const wishList = require("./routes/wishListRoutes");
+const address = require("./routes/addressRoutes");
 
 //db coonection
 const dbConnection = require("./config/database");
@@ -50,6 +51,7 @@ app.use("/api/v1/users", user);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/review", reviwes);
 app.use("/api/v1/wishList", wishList);
+app.use("/api/v1/address", address);
 
 // handling unexist route
 app.all("*", (req, res, next) => {

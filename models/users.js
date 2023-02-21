@@ -41,6 +41,16 @@ const userSchema = new mongoose.Schema(
         ref: "Proudcts",
       },
     ],
+    address: [
+      {
+        id: mongoose.Schema.Types.ObjectId,
+        alias: String,
+        details: String,
+        postalCode: Number,
+        city: String,
+        phone: String,
+      },
+    ],
   },
   { timestamps: true }
 );
