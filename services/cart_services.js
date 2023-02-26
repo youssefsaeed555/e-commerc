@@ -108,7 +108,7 @@ exports.updateQuantity = asyncHandler(async (req, res, next) => {
   await cart.save();
 
   return res.status(200).json({
-    message: "product removed from cart successfully",
+    message: "product updated from cart successfully",
     numberOfCartItems: cart.cartItems.length,
     cart,
   });
