@@ -55,7 +55,7 @@ exports.getDocument = (Model, optionPopulation) =>
   });
 
 exports.findListOfDocs = (Model, modelName = "") =>
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req, res, next) => {
     let objectFilter = {};
     if (req.objFilter) objectFilter = req.objFilter;
     //get count of documents
@@ -74,7 +74,7 @@ exports.findListOfDocs = (Model, modelName = "") =>
     //excute query
     const document = await buildQuery;
     if (document.length === 0)
-      return res.json({ message: "remove some query to get results" });
+      return next(new ApiError(`no documents found`, 404));
 
     return res
       .status(200)
