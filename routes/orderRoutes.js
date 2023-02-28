@@ -8,11 +8,16 @@ const {
   getOrder,
   updateOrderDelivered,
   updateOrderPaid,
+  checkOutSession,
 } = require("../services/orderServices");
 
 const { protect, isAllowedTo } = require("../services/auth_services");
 
 routes.use(protect);
+
+routes
+  .route("/checkout-session/:cartId")
+  .get(isAllowedTo("user"), checkOutSession);
 
 routes
   .route("/")
