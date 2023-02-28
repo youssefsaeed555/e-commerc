@@ -25,7 +25,7 @@ const globalError = require("./middlewares/error_middlwares");
 
 //routes
 const routes = require("./routes");
-const { checkOutSession } = require("./services/orderServices");
+const { webHookHandler } = require("./services/orderServices");
 
 //db coonection
 const dbConnection = require("./config/database");
@@ -46,7 +46,7 @@ routes(app);
 app.post(
   "/webhock-checkout",
   express.raw({ type: "application/json" }),
-  checkOutSession
+  webHookHandler
 );
 
 // handling unexist route
