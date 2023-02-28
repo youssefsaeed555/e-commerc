@@ -141,7 +141,33 @@ exports.checkOutSession = asyncHandler(async (req, res, next) => {
   return res.status(200).json({ status: "success", session });
 });
 
-const createCardOrder = (session) => {};
+const createCardOrder = async (session) => {
+  //get the cart based on cartId
+  const cart = await Cart.findById(session.client_reference_id);
+
+  //create order
+  const order = await Orders.create({
+    user: session.name,
+    totalOrderPrice: session.amount_total / 100,
+    cartItems: cart.cartItems,
+    shippingAddress: session.metadata,
+    isPaid: true,
+    paidAt: Date.now(),
+    paymentMethod: "card",
+  });
+
+  //increase sold and decrese quantity of product
+  if (order) {
+    const bulkOptions = cart.cartItems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product },
+        update: { $inc: { sold: +item.quantity, quantity: -item.quantity } },
+      },
+    }));
+    await Prodcut.bulkWrite(bulkOptions, {});
+    await Cart.findByIdAndDelete(session.client_reference_id);
+  }
+};
 
 exports.webHookHandler = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
@@ -156,7 +182,7 @@ exports.webHookHandler = asyncHandler(async (req, res, next) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
   if (event.type === "checkout.session.completed") {
-    console.log(event);
-    console.log("created");
+    createCardOrder(event.data.object);
   }
+  return res.status(200).json({ received: "true" });
 });
