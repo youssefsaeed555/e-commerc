@@ -134,7 +134,7 @@ exports.checkOutSession = asyncHandler(async (req, res, next) => {
     success_url: `${req.protocol}://${req.get("host")}/orders`,
     cancel_url: `${req.protocol}://${req.get("host")}/cart`,
     client_reference_id: req.params.cartId,
-    customer_email: "yossefsaid555@gmail.com",
+    customer_email: req.user.email,
     metadata: req.body.shippingAddress,
   });
 
@@ -150,10 +150,13 @@ exports.webHookHandler = asyncHandler(async (req, res, next) => {
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK
+      process.env.WEBHOOK_STRIPE
     );
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-  console.log(event);
+  if (event.type === "checkout.session.completed") {
+    console.log(event);
+    console.log("created");
+  }
 });
