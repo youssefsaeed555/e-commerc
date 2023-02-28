@@ -4,12 +4,19 @@ const path = require("path");
 const express = require("express");
 
 const app = express();
+const cors = require("cors");
+const compression = require("compression");
+const morgan = require("morgan");
+const { webHookHandler } = require("./services/orderServices");
+
+app.use(cors());
+app.options("*", cors());
+app.use(compression());
 
 //config environment
 require("dotenv").config();
 
 //logger request
-const morgan = require("morgan");
 
 //ApiError handler
 const ApiError = require("./utils/ApiError");
@@ -33,6 +40,8 @@ app.use(express.static(path.join(__dirname, "uploads")));
 if (process.env.NODE_ENV === "devolopment") {
   app.use(morgan("dev"));
 }
+//stripe webhook
+app.post("/webhook", express.raw({ type: "application/json" }), webHookHandler);
 
 //mount routes
 routes(app);

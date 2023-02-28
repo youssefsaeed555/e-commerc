@@ -1,3 +1,5 @@
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
 const factoryHandler = require("./factory_handler");
@@ -95,4 +97,63 @@ exports.updateOrderDelivered = asyncHandler(async (req, res, next) => {
     message: "success",
     data: updateOrder,
   });
+});
+
+exports.checkOutSession = asyncHandler(async (req, res, next) => {
+  const taxPrice = 0;
+  const shippingPrice = 0;
+  //get the cart based on cartId
+  const cart = await Cart.findById(req.params.cartId);
+  if (!cart) {
+    return next(new ApiError(`no cart for this user`, 404));
+  }
+
+  //get totalOrder price & check if coupon is applied
+  const totalPrice = cart.totalPriceAfterDiscount
+    ? cart.totalPriceAfterDiscount
+    : cart.totalPrice;
+
+  //calc totalOrderPrice
+  const totalOrderPrice = totalPrice + taxPrice + shippingPrice;
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "egp",
+          unit_amount: totalOrderPrice * 100,
+          product_data: {
+            name: req.user.name,
+            description: "welcome in handMade ITI ",
+          },
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `${req.protocol}://${req.get("host")}/orders`,
+    cancel_url: `${req.protocol}://${req.get("host")}/cart`,
+    client_reference_id: req.params.cartId,
+    customer_email: "yossefsaid555@gmail.com",
+    metadata: req.body.shippingAddress,
+  });
+
+  return res.status(200).json({ status: "success", session });
+});
+
+const createCardOrder = (session) => {};
+
+exports.webHookHandler = asyncHandler(async (req, res, next) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  console.log(event);
 });
