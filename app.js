@@ -6,8 +6,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const compression = require("compression");
-const morgan = require("morgan");
-const { webHookHandler } = require("./services/orderServices");
 
 app.use(cors());
 app.options("*", cors());
@@ -17,6 +15,7 @@ app.use(compression());
 require("dotenv").config();
 
 //logger request
+const morgan = require("morgan");
 
 //ApiError handler
 const ApiError = require("./utils/ApiError");
@@ -26,6 +25,7 @@ const globalError = require("./middlewares/error_middlwares");
 
 //routes
 const routes = require("./routes");
+const { webHookHandler } = require("./services/orderServices");
 
 //db coonection
 const dbConnection = require("./config/database");
@@ -40,11 +40,14 @@ app.use(express.static(path.join(__dirname, "uploads")));
 if (process.env.NODE_ENV === "devolopment") {
   app.use(morgan("dev"));
 }
-//stripe webhook
-app.post("/webhook", express.raw({ type: "application/json" }), webHookHandler);
 
 //mount routes
 routes(app);
+app.post(
+  "/webhock-checkout",
+  express.raw({ type: "application/json" }),
+  webHookHandler
+);
 
 // handling unexist route
 app.all("*", (req, res, next) => {
