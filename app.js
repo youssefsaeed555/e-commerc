@@ -32,6 +32,12 @@ const dbConnection = require("./config/database");
 
 dbConnection();
 
+app.post(
+  "/webhock-checkout",
+  express.raw({ type: "application/json" }),
+  webHookHandler
+);
+
 //parse body
 app.use(express.json());
 //serve static files
@@ -43,11 +49,6 @@ if (process.env.NODE_ENV === "devolopment") {
 
 //mount routes
 routes(app);
-app.post(
-  "/webhock-checkout",
-  express.raw({ type: "application/json" }),
-  webHookHandler
-);
 
 // handling unexist route
 app.all("*", (req, res, next) => {
