@@ -147,7 +147,7 @@ const createCardOrder = async (session) => {
 
   //create order
   const order = await Orders.create({
-    user: session.name,
+    user: cart.user,
     totalOrderPrice: session.amount_total / 100,
     cartItems: cart.cartItems,
     shippingAddress: session.metadata,
