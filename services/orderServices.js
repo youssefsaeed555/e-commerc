@@ -184,5 +184,5 @@ exports.webHookHandler = asyncHandler(async (req, res, next) => {
   if (event.type === "checkout.session.completed") {
     createCardOrder(event.data.object);
   }
-  return res.status(200).json({ received: "true" });
+  return res.status(200).json({ received: "success" });
 });
