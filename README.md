@@ -3,7 +3,7 @@ This project is a web application that allows users to shop for products, leave 
 
 
 
-#Features
+# Features
 1. Build the RESTful API of the App.
 2. Implemented authentication and authorization for different roles and permissions for different user roles and permissions to ensure data privacy and protection..
 4. Product Reviews and Wishlists: Users can leave product reviews and create wishlists to keep track of their favorite products, and manage their addresses.
