@@ -1,5 +1,5 @@
 # E-commerc
-This project is a web application that allows users to shop for products, leave product reviews, manage their addresses, create wishlists, and make online payments using Stripe. It has been built using MERN stack technologies and features advanced error handling, validation layers, and security measures to ensure a seamless user experience.
+This project is a web application that allows users to shop for products, leave product reviews, manage their addresses, create wishlists, and make online payments using Stripe. It has been built using Node.js and features advanced error handling, validation layers, and security measures to ensure a seamless user experience.
 
 
 
